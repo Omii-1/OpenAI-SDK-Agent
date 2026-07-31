@@ -2,7 +2,6 @@ import {Agent, run, tool} from '@openai/agents'
 import {z} from "zod"
 import "dotenv/config"
 
-let sharedHistory = []
 
 const executeSql = tool({
   name: 'execute sql',
@@ -45,17 +44,14 @@ const sqlAgent = new Agent({
 
 async function main(q='') {
   // stored the message in db
-  sharedHistory.push({role: "user", content: q})
-  const res = await run(sqlAgent, sharedHistory)
-  sharedHistory = res.history
+  const res = await run(sqlAgent, q, {
+    conversationId: 'conv_6a6cf11bc5b081979923bbc8516223070b7cb03410402b2e'
+  })
 
   // console.log(res.history);
-  console.log('Final Out: ', res.finalOutput);
-
-  console.log(sharedHistory);
-  
+  console.log('Final Out: ', res.finalOutput);  
 }
 
-main('Hi my name is om juvatkar').then(() => {
-  main('Get me all the users with my name')
-})
+// main('Hi my name is om juvatkar')
+
+main('Get me all the users with my name')
